@@ -12,7 +12,7 @@ router= APIRouter(
 )
 
 @router.post("/", response_model=OrderSchema, summary="Создать заказ")
-def create_order(order_data: CreateOrderSchema):
+async def create_order(order_data: CreateOrderSchema):
     item = next((item for item in cars_items if item.id == order_data.car_id and item.available), None)
     if not item:
         return HTTPException(status_code=404, detail="Автомобиль не найден")
@@ -23,13 +23,13 @@ def create_order(order_data: CreateOrderSchema):
     return new_order
 
 @router.get("/{order_id}", response_model=OrderSchema, summary="Получить информацию о заказе")
-def get_order(order_id: int):
+async def get_order(order_id: int):
     order = next((order for order in orders if order.id == order_id), None )
     if not order:
         return HTTPException(status_code=404, detail="Заказ не найден")
     return order
 
 @router.get("/{user_id}", response_model=OrderSchema, summary="Получить информацию о всех заказах пользователя")
-def get_user_orders(user_id: int):
+async def get_user_orders(user_id: int):
     user_orders = [order for order in orders if order.user_id == user_id]
     return user_orders

@@ -3,3 +3,4 @@ uvicorn
 sqlalchemy
 postgres
 routers
+pydantic==1.10.11

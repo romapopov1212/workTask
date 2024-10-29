@@ -11,12 +11,12 @@ router = APIRouter(
 )
 
 @router.get("/", response_model=List[СarItemSchema], summary="Получить список техники")
-def get_car_items():
+async def get_car_items():
     return cars_items
 
 
 @router.get("/{item_id}", response_model=СarItemSchema, summary="Получить информацию о конкретной техники")
-def get_car_item(item_id: int):
+async def get_car_item(item_id: int):
     item = next((item for item in cars_items if item.id == item_id), None)
     if not item:
         raise HTTPException(status_code=404, detail="Техника не найдена")
