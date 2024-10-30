@@ -6,7 +6,7 @@ class СarItemSchema(BaseModel):
     id: int
     name: str
     description: str
-    price: float
+    price: int
     available: str
 
 
@@ -14,7 +14,7 @@ class OrderSchema(BaseModel):
     id: int
     car_id: int
     user_id: int
-    total_price: float
+    total_price: int
 
 
 class CreateOrderSchema(BaseModel):
