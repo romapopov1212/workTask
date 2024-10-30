@@ -1,10 +1,12 @@
-from db.models import CarItem, Order
+from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-# Симулированная база данных
-cars_items = [
-    CarItem(id=1, name="Погрузчик фронтальный SEM636F", description="крутой погрузчик", price=1000.0, available=True),
-    CarItem(id=2, name="Smartphone", description="Latest model smartphone", price=800.0, available=True),
-    CarItem(id=3, name="Tablet", description="Lightweight tablet", price=400.0, available=False),
-]
+# Настройка подключения к базе данных
+DATABASE_URL = "sqlite:///./test.db"  # Замените на нужный URL базы данных
 
-orders = []
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Базовый класс для моделей
+Base = declarative_base()
