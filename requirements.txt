@@ -6,3 +6,4 @@ pydantic==1.10.11
 pydantic_settings
 sqlalchemy
 psycopg2
+python-dotenv
