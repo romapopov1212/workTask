@@ -1,13 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from settings import Settings
+from settings import settings
+
 engine = create_engine(
-    Settings.database_url,
+    settings.database_url,
 )
 
 Session = sessionmaker(
     engine,
     autoflush=False,
     autocommit=False,
-    
+
 )
