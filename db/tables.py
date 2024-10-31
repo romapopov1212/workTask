@@ -6,7 +6,7 @@ Base = declarative_base()
 
 class Car(Base):
     __tablename__ = "Cars"
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     descriptions = Column(String, nullable=False)
     price = Column(Integer, nullable=False)
@@ -14,7 +14,7 @@ class Car(Base):
 
 class Order(Base):
     __tablename__ = 'Orders'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, primary_key=True)
     price = Column(Integer, nullable=False)
 
