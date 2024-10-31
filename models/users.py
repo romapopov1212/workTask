@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 
-
-class User(BaseModel):
-    user_id: int
+class UserBase(BaseModel):
     name: str
     surname: str
     email: str
     hashed_password: str
+
+class User(UserBase):
+    id: int
     class Config:
         orm_mode = True

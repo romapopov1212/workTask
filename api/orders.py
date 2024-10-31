@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 
 from models.orders import Order
 from database import get_session
-from db import orders
+from db import tables
+
 
 router = APIRouter(
     prefix='/orders',
@@ -15,7 +16,7 @@ router = APIRouter(
 def get_orders(session: Session = Depends(get_session)):
     orders_list = (
         session
-        .query(orders.Order)
+        .query(tables.Order)
         .all()
     )
     if not orders_list:
@@ -29,10 +30,16 @@ def get_orders_by_id(
     session: Session=Depends(get_session)
 ):
     order_one = (
-        (session.query(orders.Order)
-        .filter(orders.Order.order_id == order_id)
-        .first())
+        session
+        .query(tables.Order)
+        .filter(tables.Order.id == order_id)
+        .first()
     )
     if order_one is None:
         raise HTTPException(status_code=404, detail="Order nor found")
     return order_one
+
+#@router.post('/', response_model=Order)
+#def create_order(
+#        session: Session = Depends(get_session)
+#):

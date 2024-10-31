@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 
 from models.cars import Car
 from database import get_session
-from db import cars
+from db import tables
+
+
 router = APIRouter(
     prefix='/cars'
 )
@@ -14,7 +16,7 @@ router = APIRouter(
 def get_cars(session: Session = Depends(get_session)): # внедрение зависимостей
     cars_list = (
         session
-        .query(cars.Car)
+        .query(tables.Car)
         .all()
     )
     if not cars_list:
@@ -29,8 +31,8 @@ def get_cars_by_id(
 ):
     car_one = (
         session
-        .query(cars.Car)
-        .filter(cars.Car.car_id == car_id)
+        .query(tables.Car)
+        .filter(tables.Car.id == car_id)
         .first()
     )
     if car_one is None:
