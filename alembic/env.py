@@ -5,8 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from db import *
-
+from db import tables
+from db.tables import Base
 
 
 
@@ -16,7 +16,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 
-target_metadata = Car.metadata
+target_metadata = Base.metadata
 
 
 
