@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from models.orders import Order
 from database import get_session
 from db import tables
-
+from services.orders import OrderService
 
 router = APIRouter(
     prefix='/orders',
@@ -13,15 +13,8 @@ router = APIRouter(
 
 
 @router.get('/', response_model=List[Order])
-def get_orders(session: Session = Depends(get_session)):
-    orders_list = (
-        session
-        .query(tables.Order)
-        .all()
-    )
-    if not orders_list:
-        raise HTTPException(status_code=404, detail="No orders found")
-    return orders_list
+def get_orders(service: OrderService=Depends()):
+    return service.get_list()
 
 
 @router.get('/{order_id}', response_model=Order)
