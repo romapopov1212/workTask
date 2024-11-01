@@ -1,15 +1,13 @@
 from datetime import timedelta, datetime
-from symtable import Class
-from sys import prefix
-from termios import CREAD
-from typing import Annotated
+from http import HTTPStatus
+from admin_info import username as AdminName
+from admin_info import password as AdminPassword
 from fastapi import APIRouter, Depends, HTTPException
-from jose.constants import ALGORITHMS
-from passlib.handlers.bcrypt import bcrypt
 from pydantic import BaseModel
 from sqlalchemy.orm import Session as S
-from sqlalchemy.util import deprecated
 from starlette import status
+from starlette.status import HTTP_401_UNAUTHORIZED
+
 from database import Session
 from models.users import UserResponse
 from db.tables import User
@@ -40,11 +38,55 @@ class Token(BaseModel):
 db_dependency = Depends(get_session)
 @router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def create_user(create_user_request: CreateUserRequest, db: S = db_dependency ):
-    create_user_model = User(
-        username=create_user_request.username,
-        hashed_password = bcrypt_context.hash(create_user_request.password)
-    )
+    if create_user_request.username == AdminName and create_user_request.password == AdminPassword:
+        create_user_model = User(
+            username=create_user_request.username,
+            hashed_password = bcrypt_context.hash(create_user_request.password),
+            is_admin = True
+        )
+    else:
+        create_user_model = User(
+            username=create_user_request.username,
+            hashed_password=bcrypt_context.hash(create_user_request.password),
+            is_admin=False
+        )
     db.add(create_user_model)
     db.commit()
     db.refresh(create_user_model)
     return create_user_model
+
+@router.post('/token', response_model=Token)
+def login_for_access_token(
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        db: S = db_dependency
+):
+    user = auth_user(form_data.username, form_data.password, db)
+    if not user:
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail='Не удалось подтвердить пользователя')
+    token = create_access_token(user.username, user.id, timedelta(minutes=20))
+    return {'access_token': token, 'token_type': 'bearer'}
+
+def auth_user(username: str, password: str, db):
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        return False
+    if not bcrypt_context.verify(password, user.hashed_password):
+        return False
+    return user
+
+def create_access_token(username: str, user_id: int, expires_delta: timedelta):
+    encode = {'sub': username, 'id': user_id}
+    expires = datetime.utcnow() + expires_delta
+    encode.update({'exp': expires})
+    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+
+def get_current_user(token: str=Depends(oauth_bearer)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get('sub')
+        user_id: int = payload.get('id')
+        if username is None or user_id is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
+        return {'username': username, 'id': user_id}
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
