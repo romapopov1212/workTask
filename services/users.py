@@ -13,7 +13,7 @@ class UserService:
         self.session = session
 
     def get_list(self) -> List[tables.User]:
-        user = self.session.query().all()
+        user = self.session.query(tables.User).all()
         if user is None:
             raise HTTPException(status_code=404, detail='Not found')
         return user
