@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -16,7 +16,7 @@ class Car(Base):
 class Order(Base):
     __tablename__ = 'Orders'
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
     price = Column(Integer, nullable=False)
 
 

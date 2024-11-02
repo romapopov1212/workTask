@@ -1,18 +1,18 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from fastapi.security import OAuth2PasswordRequestForm
+
+from models.auth import UserCreate, Token
 router = APIRouter(
     prefix='/auth',
 )
 
-SECRET_KEY = '7oHQyjS2lQIcK7k1pfyWE0KnywC3fp2O'
-ALGORITHM = 'HS256'
-
-@router.post('/sing-up')
-def sung_up():
+@router.post('/sing-up', response_model=Token)
+def sing_up(user_data: UserCreate):
     pass
 
-@router.post('/sing-in')
-def sing_in():
+@router.post('/sing-in', response_model=Token)
+def sing_in(form_data: OAuth2PasswordRequestForm = Depends()):
     pass
 
 
