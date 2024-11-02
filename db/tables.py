@@ -7,7 +7,8 @@ Base = declarative_base()
 class Car(Base):
     __tablename__ = "Cars"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    type = Column(String, nullable=False)
+    model = Column(String, nullable=False)
     descriptions = Column(String, nullable=False)
     price = Column(Integer, nullable=False)
 
