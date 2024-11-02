@@ -15,3 +15,5 @@ class Car(CarBase):
 class CarCreate(CarBase):
     #в дальнейшем могут появиться поля
     pass
+class CarUpdate(CarBase):
+    pass
