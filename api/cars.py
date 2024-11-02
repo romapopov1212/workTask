@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends
 
-from models.cars import Car
+from models.cars import Car, CarCreate
 from services.cars import CarService
 
 router = APIRouter(
@@ -20,3 +20,7 @@ def get_cars_by_id(
         service: CarService=Depends()
 ):
     return service.get_by_id(car_id)
+
+@router.post('/', response_model=Car)
+def create_car(car_data : CarCreate, services: CarService = Depends()):
+    return services.create(car_data)
