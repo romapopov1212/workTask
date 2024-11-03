@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+
+
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -13,16 +15,16 @@ class Car(Base):
     price = Column(Integer, nullable=False)
 
 
-class Order(Base):
-    __tablename__ = 'Orders'
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    price = Column(Integer, nullable=False)
-
 
 class User(Base):
     __tablename__ = "Users"
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, nullable=False)
-    username = Column(String, nullable=False)
-    hashed_password = Column(String, nullable=False)
+    email = Column(Text, unique=True)
+    username = Column(Text, unique=True)
+    password_hash = Column(Text)
+
+class Order(Base):
+    __tablename__ = 'Orders'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('Users.id'))
+    price = Column(Integer, nullable=False)
