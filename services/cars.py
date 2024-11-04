@@ -1,4 +1,3 @@
-from socket import send_fds
 from typing import List
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session

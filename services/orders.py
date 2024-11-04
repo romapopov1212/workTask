@@ -8,9 +8,14 @@ class OrderService:
     def __init__(self, session: Session=Depends(get_session)):
         self.session = session
 
-    def get_list(self) -> List[tables.Order]:
-        order = self.session.query(tables.Order).all()
-        if order is None:
-            raise HTTPException(status_code=404, detail='Not found')
-        return order
+    def get_list(self, user_id: int) -> List[tables.Order]:
+        query = (
+            self.session
+            .query(tables.Order)
+            .filter_by(user_id=user_id)
+        )
+        car = query.all()
+        return car
+
+#    def create(self, user_id: int, operation_data: ) -> tables.Order:
 
