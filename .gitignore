@@ -3,3 +3,4 @@
 database.sqlite3
 __pycache__
 admin_info.py
+.env

@@ -11,7 +11,7 @@ class Car(Base):
     id = Column(Integer, primary_key=True, index=True)
     type = Column(String, nullable=False)
     model = Column(String, nullable=False)
-    descriptions = Column(String, nullable=False)
+    descriptions = Column(Text, nullable=False)
     price = Column(Integer, nullable=False)
 
 
